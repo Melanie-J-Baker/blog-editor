@@ -9,6 +9,8 @@ let contentDiv = document.getElementById("content");
 let posts = [];
 let comments = [];
 let post;
+localStorage.setItem("user", "");
+localStorage.setItem("token", "");
 
 async function signup(e, username, password) {
   e.preventDefault();
@@ -181,7 +183,8 @@ async function createPosts() {
   userStatusDisplay();
 }
 
-async function deletePost(id) {
+async function deletePost(e, id) {
+  e.preventDefault();
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
@@ -218,7 +221,58 @@ async function deletePost(id) {
   }
 }
 
+async function updatePost(id, title, text, published) {
+  let inMemoryToken = localStorage.getItem("token");
+  try {
+    const response = await fetch(
+      "http://localhost:3000/blog/posts/" +
+        id +
+        "/?" +
+        new URLSearchParams({
+          secret_token: inMemoryToken,
+        }),
+      {
+        mode: "cors",
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          Authorization: `Bearer ${inMemoryToken}`,
+        },
+        body: new URLSearchParams({
+          title: title.toString(),
+          text: text.toString(),
+          published: published.toString(),
+        }),
+      }
+    );
+    if (response.ok) {
+      let result = await response.json();
+      contentDiv.textContent = `Post updated: ${result.title}`;
+      setTimeout(() => {
+        createPosts();
+      }, 3000);
+    } else {
+      throw new Error(
+        JSON.stringify({
+          code: response.status,
+          message: response.statusText,
+        })
+      );
+    }
+  } catch (error) {
+    alert(error);
+  }
+}
+
 addBtnEventListeners();
 createPosts();
 
-export { signup, login, submitCommentForm, showPost, createPosts, deletePost };
+export {
+  signup,
+  login,
+  submitCommentForm,
+  showPost,
+  createPosts,
+  deletePost,
+  updatePost,
+};

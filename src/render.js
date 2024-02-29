@@ -1,10 +1,11 @@
 import {
+  signup,
+  login,
   submitCommentForm,
   showPost,
   createPosts,
   deletePost,
-  signup,
-  login,
+  updatePost,
 } from "./index";
 
 let contentDiv = document.getElementById("content");
@@ -23,8 +24,10 @@ function addBtnEventListeners() {
 function userStatusDisplay() {
   let userStatusDiv = document.getElementById("userStatus");
   let user = localStorage.getItem("user");
-  if (user) {
+  if (user !== "") {
     userStatusDiv.textContent = "Logged in as " + user;
+  } else {
+    userStatusDiv.textContent = "Please login or create an account";
   }
 }
 
@@ -60,7 +63,7 @@ function signupForm() {
   passwordLabel.textContent = "Password: ";
   passwordLabel.className = "signupLabel";
   passwordInput.id = "password";
-  passwordInput.type = "text";
+  passwordInput.type = "password";
   passwordInput.name = "password";
   submitBtn.type = "submit";
   submitBtn.class = "submitBtn";
@@ -103,7 +106,7 @@ function loginForm() {
   passwordLabel.textContent = "Password: ";
   passwordLabel.className = "loginLabel";
   passwordInput.id = "password";
-  passwordInput.type = "text";
+  passwordInput.type = "password";
   passwordInput.name = "password";
   submitBtn.type = "submit";
   submitBtn.class = "submitBtn";
@@ -161,16 +164,20 @@ function renderPosts(posts) {
     timestamp.textContent = posts[i].timestamp;
     commentsBtn.textContent = "See all comments";
     commentsBtn.addEventListener("click", (event) => {
-      showPost(event.target.id);
+      showPost(event, event.target.id);
     });
     deleteBtn.textContent = "Delete post";
     deleteBtn.className = "deleteBtn";
     deleteBtn.id = `${posts[i]._id}`;
-    deleteBtn.addEventListener("click", (e) => {
-      deletePost(e.target.id);
+    deleteBtn.addEventListener("click", (event) => {
+      deletePost(event.target.id);
     });
     updateBtn.textContent = "Update post";
     updateBtn.className = "updateBtn";
+    updateBtn.id = `${posts[i]._id}`;
+    updateBtn.addEventListener("click", (event) => {
+      updatePostForm(event.target.id);
+    });
     postDiv.appendChild(title);
     postDiv.appendChild(text);
     postDiv.appendChild(timestamp);
@@ -238,6 +245,85 @@ function renderPost(post, comments) {
   }
   contentDiv.appendChild(postDiv);
   postDiv.appendChild(commentsDiv);
+}
+
+function updatePostForm(id) {
+  contentDiv.textContent = "";
+  let updatePostHeading = document.createElement("h4");
+  let backBtn = document.createElement("div");
+  let form = document.createElement("form");
+  let titleInputDiv = document.createElement("div");
+  let titleInputLabel = document.createElement("label");
+  let titleInput = document.createElement("input");
+  let textInputDiv = document.createElement("div");
+  let textInputLabel = document.createElement("label");
+  let textInput = document.createElement("input");
+  let publishedInputDiv = document.createElement("div");
+  let publishedInputLabel = document.createElement("label");
+  let publishedInput = document.createElement("input");
+
+  let submitBtn = document.createElement("button");
+  updatePostHeading.className = "updatePostHeading";
+  updatePostHeading.textContent = "Update post";
+  backBtn.className = "backBtn";
+  backBtn.textContent = "Cancel";
+  form.id = "updatePostForm";
+  form.method = "PUT";
+  form.action = "http://localhost:3000/blog/posts/" + id + "/";
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    let title = titleInput.value;
+    let text = textInput.value;
+    let published;
+    if (publishedInput.checked) {
+      published = true;
+    } else {
+      published = false;
+    }
+    updatePost(id, title, text, published);
+  };
+  titleInputDiv.className = "updatePostInputDiv";
+  textInputDiv.className = "updatePostInputDiv";
+  titleInputLabel.className = "updatePostInputLabel";
+  textInputLabel.className = "updatePostInputLabel";
+  titleInputLabel.htmlFor = "title";
+  textInputLabel.htmlFor = "text";
+  titleInputLabel.textContent = "Title: ";
+  textInputLabel.textContent = "Post text: ";
+  titleInput.className = "updatePostInput";
+  textInput.className = "updatePostInput";
+  titleInput.type = "text";
+  titleInput.name = "title";
+  titleInput.id = "title";
+  textInput.type = "text";
+  textInput.name = "text";
+  textInput.id = "text";
+  publishedInputDiv.className = "updatePostInputDiv";
+  publishedInputLabel.className = "updatePostInputLabel";
+  publishedInputLabel.htmlFor = "published";
+  publishedInputLabel.textContent = "Publish: ";
+  publishedInput.className = "updatePostInput";
+  publishedInput.type = "checkbox";
+  publishedInput.name = "published";
+  publishedInput.id = "published";
+  submitBtn.type = "submit";
+  submitBtn.textContent = "Update post";
+  backBtn.addEventListener("click", () => {
+    showPost(id);
+  });
+  titleInputDiv.appendChild(titleInputLabel);
+  titleInputDiv.appendChild(titleInput);
+  form.appendChild(titleInputDiv);
+  textInputDiv.appendChild(textInputLabel);
+  textInputDiv.appendChild(textInput);
+  form.appendChild(textInputDiv);
+  publishedInputDiv.appendChild(publishedInputLabel);
+  publishedInputDiv.appendChild(publishedInput);
+  form.appendChild(publishedInputDiv);
+  form.appendChild(submitBtn);
+  contentDiv.appendChild(updatePostHeading);
+  contentDiv.appendChild(backBtn);
+  contentDiv.appendChild(form);
 }
 
 function addCommentForm(id) {

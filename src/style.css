@@ -1,0 +1,61 @@
+h1 {
+    width: 100%;
+    text-align: center;
+}
+
+#userStatus {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+}
+
+.postDiv, .postDetailDiv {
+    width: 100%;
+    padding: 3px;
+    margin: 3px;
+}
+
+.title {
+    text-align: center;
+}
+
+.postDetailtimestamp, .timestamp, .commentTimestamp {
+    font-style: italic;
+}
+
+.commentsBtn,
+.addCommentBtn,
+.backBtn,
+.deleteBtn,
+.updateBtn {
+    cursor: pointer;
+    text-decoration: underline;
+    margin-bottom: 5px;
+}
+
+.commentsBtn:hover,
+.addCommentBtn:hover,
+.backBtn:hover {
+    color: rgb(83, 83, 2)
+
+}
+
+.commentsBtn {
+    margin-top: 15px;
+}
+
+.submitBtn {
+    cursor: pointer;
+}
+
+.commentInputDiv {
+    margin: 20px 10px;
+}
+
+.commentInputLabel {
+    margin-right: 20px;
+}
+
+input[type="checkbox"] {
+    accent-color: rgb(83, 83, 2)
+}

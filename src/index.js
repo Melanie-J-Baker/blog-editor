@@ -138,34 +138,45 @@ async function fetchComments(id) {
   }
 }
 
-async function submitCommentForm(e, id, text, username) {
-  e.preventDefault();
-  await fetch("http://localhost:3000/blog/posts/" + id + "/comments/", {
-    mode: "cors",
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
-    body: new URLSearchParams({
-      text: text.toString(),
-      username: username.toString(),
-    }),
-  })
-    .then(function (response) {
-      const data = response.json();
-      return data;
-    })
-    .then(function (data) {
-      showPost(data.post);
-      if (text) {
-        alert("Comment created: " + text);
+async function addPost(title, text, published) {
+  let inMemoryToken = localStorage.getItem("token");
+  try {
+    const response = await fetch(
+      "http://localhost:3000/blog/posts/?" +
+        new URLSearchParams({
+          secret_token: inMemoryToken,
+        }),
+      {
+        mode: "cors",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          Authorization: `Bearer ${inMemoryToken}`,
+        },
+        body: new URLSearchParams({
+          title: title.toString(),
+          text: text.toString(),
+          published: published.toString(),
+        }),
       }
-      return;
-    })
-    .catch(function (err) {
-      //Failure
-      alert("Error: err");
-    });
+    );
+    if (response.ok) {
+      let result = await response.json();
+      contentDiv.textContent = `Post created: ${result.title}`;
+      setTimeout(() => {
+        createPosts();
+      }, 3000);
+    } else {
+      throw new Error(
+        JSON.stringify({
+          code: response.status,
+          message: response.statusText,
+        })
+      );
+    }
+  } catch (error) {
+    alert(error);
+  }
 }
 
 async function showPost(id) {
@@ -183,8 +194,7 @@ async function createPosts() {
   userStatusDisplay();
 }
 
-async function deletePost(e, id) {
-  e.preventDefault();
+async function deletePost(id) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
@@ -242,6 +252,7 @@ async function updatePost(id, title, text, published) {
           title: title.toString(),
           text: text.toString(),
           published: published.toString(),
+          _id: id,
         }),
       }
     );
@@ -264,15 +275,83 @@ async function updatePost(id, title, text, published) {
   }
 }
 
+async function addComment(e, id, text, username) {
+  e.preventDefault();
+  await fetch("http://localhost:3000/blog/posts/" + id + "/comments/", {
+    mode: "cors",
+    method: "post",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+    },
+    body: new URLSearchParams({
+      text: text.toString(),
+      username: username.toString(),
+    }),
+  })
+    .then(function (response) {
+      const data = response.json();
+      return data;
+    })
+    .then(function (data) {
+      showPost(data.post);
+      return;
+    })
+    .catch(function (err) {
+      //Failure
+      alert("Error: err");
+    });
+}
+
+async function deleteComment(postid, commentid) {
+  let inMemoryToken = localStorage.getItem("token");
+  try {
+    const response = await fetch(
+      "http://localhost:3000/blog/posts/" +
+        postid +
+        "/comments/" +
+        commentid +
+        "/?" +
+        new URLSearchParams({
+          secret_token: inMemoryToken,
+        }),
+      {
+        mode: "cors",
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${inMemoryToken}`,
+        },
+      }
+    );
+    if (response.ok) {
+      let result = await response.json();
+      contentDiv.textContent = "Comment deleted";
+      setTimeout(() => {
+        showPost(postid);
+      }, 3000);
+    } else {
+      throw new Error(
+        JSON.stringify({
+          code: response.status,
+          message: response.statusText,
+        })
+      );
+    }
+  } catch (error) {
+    alert(error);
+  }
+}
+
 addBtnEventListeners();
 createPosts();
 
 export {
   signup,
   login,
-  submitCommentForm,
+  addComment,
   showPost,
   createPosts,
+  addPost,
   deletePost,
   updatePost,
+  deleteComment,
 };

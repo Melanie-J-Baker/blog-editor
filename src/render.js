@@ -1,11 +1,13 @@
 import {
   signup,
   login,
-  submitCommentForm,
+  addComment,
   showPost,
   createPosts,
+  addPost,
   deletePost,
   updatePost,
+  deleteComment,
 } from "./index";
 
 let contentDiv = document.getElementById("content");
@@ -53,12 +55,14 @@ function signupForm() {
       createPosts();
     }, 3000);
   };
+  usernameDiv.className = "signinInputDiv";
   usernameLabel.htmlFor = "username";
   usernameLabel.textContent = "Username: ";
   usernameLabel.className = "signupLabel";
   usernameInput.id = "username";
   usernameInput.type = "text";
   usernameInput.name = "username";
+  passwordDiv.className = "signinInputDiv";
   passwordLabel.htmlFor = "password";
   passwordLabel.textContent = "Password: ";
   passwordLabel.className = "signupLabel";
@@ -96,12 +100,14 @@ function loginForm() {
     let password = passwordInput.value;
     login(e, username, password);
   };
+  usernameDiv.className = "loginInputDiv";
   usernameLabel.htmlFor = "username";
   usernameLabel.textContent = "Username: ";
   usernameLabel.className = "loginLabel";
   usernameInput.id = "username";
   usernameInput.type = "text";
   usernameInput.name = "username";
+  passwordDiv.className = "loginInputDiv";
   passwordLabel.htmlFor = "password";
   passwordLabel.textContent = "Password: ";
   passwordLabel.className = "loginLabel";
@@ -122,6 +128,13 @@ function loginForm() {
 }
 
 function renderPosts(posts) {
+  let addPostBtn = document.createElement("div");
+  addPostBtn.id = "addPostBtn";
+  addPostBtn.textContent = "Write a new post";
+  addPostBtn.addEventListener("click", () => {
+    addPostForm();
+  });
+  contentDiv.appendChild(addPostBtn);
   for (let i in posts) {
     let postDiv = document.createElement("div");
     let title = document.createElement("h3");
@@ -164,7 +177,7 @@ function renderPosts(posts) {
     timestamp.textContent = posts[i].timestamp;
     commentsBtn.textContent = "See all comments";
     commentsBtn.addEventListener("click", (event) => {
-      showPost(event, event.target.id);
+      showPost(event.target.id);
     });
     deleteBtn.textContent = "Delete post";
     deleteBtn.className = "deleteBtn";
@@ -232,6 +245,13 @@ function renderPost(post, comments) {
     let commentText = document.createElement("p");
     let commentUsername = document.createElement("p");
     let commentTimestamp = document.createElement("p");
+    let deleteCommentBtn = document.createElement("button");
+    deleteCommentBtn.className = "deleteCommentBtn";
+    deleteCommentBtn.id = `${comments[i]._id}`;
+    deleteCommentBtn.textContent = "Delete comment";
+    deleteCommentBtn.addEventListener("click", (event) => {
+      deleteComment(post._id, event.target.id);
+    });
     commentText.className = "commentText";
     commentUsername.className = "commentUsername";
     commentTimestamp.className = "commentTimestamp";
@@ -241,10 +261,87 @@ function renderPost(post, comments) {
     commentDiv.appendChild(commentText);
     commentDiv.appendChild(commentUsername);
     commentDiv.appendChild(commentTimestamp);
+    commentDiv.appendChild(deleteCommentBtn);
     postDiv.appendChild(commentDiv);
   }
   contentDiv.appendChild(postDiv);
   postDiv.appendChild(commentsDiv);
+}
+
+function addPostForm() {
+  contentDiv.textContent = "";
+  let addPostHeading = document.createElement("h4");
+  let backBtn = document.createElement("div");
+  let form = document.createElement("form");
+  let titleInputDiv = document.createElement("div");
+  let titleInputLabel = document.createElement("label");
+  let titleInput = document.createElement("input");
+  let textInputDiv = document.createElement("div");
+  let textInputLabel = document.createElement("label");
+  let textInput = document.createElement("textarea");
+  let publishedInputDiv = document.createElement("div");
+  let publishedInputLabel = document.createElement("label");
+  let publishedInput = document.createElement("input");
+  let submitBtn = document.createElement("button");
+  addPostHeading.className = "addPostHeading";
+  addPostHeading.textContent = "Create new post";
+  backBtn.className = "backBtn";
+  backBtn.textContent = "Cancel";
+  form.id = "addPostForm";
+  form.method = "POST";
+  form.action = "http://localhost:3000/blog/posts/";
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    let title = titleInput.value;
+    let text = textInput.value;
+    let published;
+    if (publishedInput.checked) {
+      published = true;
+    } else {
+      published = false;
+    }
+    addPost(title, text, published);
+  };
+  titleInputDiv.className = "addPostInputDiv";
+  textInputDiv.className = "addPostInputDiv";
+  titleInputLabel.className = "addPostInputLabel";
+  textInputLabel.className = "addPostInputLabel";
+  titleInputLabel.htmlFor = "title";
+  textInputLabel.htmlFor = "text";
+  titleInputLabel.textContent = "Title: ";
+  textInputLabel.textContent = "Post text: ";
+  titleInput.className = "addPostInput";
+  textInput.className = "addPostInput";
+  titleInput.type = "text";
+  titleInput.name = "title";
+  titleInput.id = "title";
+  textInput.name = "text";
+  textInput.id = "text";
+  publishedInputDiv.className = "addPostInputDiv";
+  publishedInputLabel.className = "addPostInputLabel";
+  publishedInputLabel.htmlFor = "published";
+  publishedInputLabel.textContent = "Publish: ";
+  publishedInput.type = "checkbox";
+  publishedInput.name = "published";
+  publishedInput.id = "published";
+  submitBtn.type = "submit";
+  submitBtn.textContent = "Create post";
+  backBtn.addEventListener("click", () => {
+    createPosts();
+  });
+  titleInputDiv.appendChild(titleInputLabel);
+  titleInputDiv.appendChild(titleInput);
+  form.appendChild(titleInputDiv);
+  textInputDiv.appendChild(textInputLabel);
+  textInputDiv.appendChild(textInput);
+  form.appendChild(textInputDiv);
+  publishedInputDiv.appendChild(publishedInputLabel);
+  publishedInputDiv.appendChild(publishedInput);
+  form.appendChild(publishedInputDiv);
+  form.appendChild(submitBtn);
+  contentDiv.appendChild(addPostHeading);
+  contentDiv.appendChild(backBtn);
+  contentDiv.appendChild(form);
 }
 
 function updatePostForm(id) {
@@ -257,11 +354,10 @@ function updatePostForm(id) {
   let titleInput = document.createElement("input");
   let textInputDiv = document.createElement("div");
   let textInputLabel = document.createElement("label");
-  let textInput = document.createElement("input");
+  let textInput = document.createElement("textarea");
   let publishedInputDiv = document.createElement("div");
   let publishedInputLabel = document.createElement("label");
   let publishedInput = document.createElement("input");
-
   let submitBtn = document.createElement("button");
   updatePostHeading.className = "updatePostHeading";
   updatePostHeading.textContent = "Update post";
@@ -295,7 +391,6 @@ function updatePostForm(id) {
   titleInput.type = "text";
   titleInput.name = "title";
   titleInput.id = "title";
-  textInput.type = "text";
   textInput.name = "text";
   textInput.id = "text";
   publishedInputDiv.className = "updatePostInputDiv";
@@ -333,7 +428,7 @@ function addCommentForm(id) {
   let form = document.createElement("form");
   let textInputDiv = document.createElement("div");
   let textInputLabel = document.createElement("label");
-  let textInput = document.createElement("input");
+  let textInput = document.createElement("textarea");
   let usernameInputDiv = document.createElement("div");
   let usernameInputLabel = document.createElement("label");
   let usernameInput = document.createElement("input");
@@ -348,14 +443,13 @@ function addCommentForm(id) {
   form.onsubmit = (event) => {
     let text = textInput.value;
     let username = usernameInput.value;
-    submitCommentForm(event, id, text, username);
+    addComment(event, id, text, username);
   };
   textInputDiv.className = "commentInputDiv";
   textInputLabel.className = "commentInputLabel";
   textInputLabel.htmlFor = "text";
   textInputLabel.textContent = "Your comment:";
   textInput.className = "commentInput";
-  textInput.type = "text";
   textInput.name = "text";
   textInput.id = "text";
   usernameInputDiv.className = "commentInputDiv";

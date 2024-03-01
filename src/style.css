@@ -9,7 +9,8 @@ h1 {
     font-weight: bold;
 }
 
-.postDiv, .postDetailDiv {
+.postDiv, .postDetailDiv, .commentDiv {
+    border: 1px solid darkgray;
     width: 100%;
     padding: 3px;
     margin: 3px;
@@ -27,7 +28,7 @@ h1 {
 .addCommentBtn,
 .backBtn,
 .deleteBtn,
-.updateBtn {
+.updateBtn, #addPostBtn {
     cursor: pointer;
     text-decoration: underline;
     margin-bottom: 5px;
@@ -54,6 +55,16 @@ h1 {
 
 .commentInputLabel {
     margin-right: 20px;
+}
+
+.loginInputDiv, .signupInputDiv {
+    margin: 5px;
+}
+
+.addPostInputDiv {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    margin: 5px;
 }
 
 input[type="checkbox"] {

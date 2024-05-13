@@ -81,7 +81,7 @@ async function login(e, username, password) {
 async function fetchPosts() {
   try {
     const response = await fetch(
-      "https://blog-api-production-66b0.up.railway.app/blog/posts",
+      "blog-api-production-66b0.up.railway.app/blog/posts",
       {
         mode: "cors",
       }

@@ -14,7 +14,7 @@ localStorage.setItem("token", "");
 
 async function signup(e, username, password) {
   e.preventDefault();
-  await fetch("http://localhost:3000/blog/signup/", {
+  await fetch("https://honored-astonishing-shelf.glitch.me/blog/signup/", {
     mode: "cors",
     method: "post",
     headers: {
@@ -44,7 +44,7 @@ async function signup(e, username, password) {
 
 async function login(e, username, password) {
   e.preventDefault();
-  await fetch("http://localhost:3000/blog/login/", {
+  await fetch("https://honored-astonishing-shelf.glitch.me/blog/login/", {
     mode: "cors",
     method: "post",
     headers: {
@@ -80,9 +80,12 @@ async function login(e, username, password) {
 
 async function fetchPosts() {
   try {
-    const response = await fetch("http://localhost:3000/blog/posts", {
-      mode: "cors",
-    });
+    const response = await fetch(
+      "https://honored-astonishing-shelf.glitch.me/blog/posts",
+      {
+        mode: "cors",
+      }
+    );
     if (response.ok) {
       posts = await response.json();
     } else {
@@ -97,9 +100,12 @@ async function fetchPosts() {
 
 async function fetchPost(id) {
   try {
-    const response = await fetch("http://localhost:3000/blog/posts/" + id, {
-      mode: "cors",
-    });
+    const response = await fetch(
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/" + id,
+      {
+        mode: "cors",
+      }
+    );
     if (response.ok) {
       post = await response.json();
     } else {
@@ -118,7 +124,9 @@ async function fetchPost(id) {
 async function fetchComments(id) {
   try {
     const response = await fetch(
-      "http://localhost:3000/blog/posts/" + id + "/comments",
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+        id +
+        "/comments",
       {
         mode: "cors",
       }
@@ -142,7 +150,7 @@ async function addPost(title, text, published) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "http://localhost:3000/blog/posts/?" +
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/?" +
         new URLSearchParams({
           secret_token: inMemoryToken,
         }),
@@ -198,7 +206,7 @@ async function deletePost(id) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "http://localhost:3000/blog/posts/" +
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
         id +
         "/?" +
         new URLSearchParams({
@@ -235,7 +243,7 @@ async function updatePost(id, title, text, published) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "http://localhost:3000/blog/posts/" +
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
         id +
         "/?" +
         new URLSearchParams({
@@ -277,17 +285,22 @@ async function updatePost(id, title, text, published) {
 
 async function addComment(e, id, text, username) {
   e.preventDefault();
-  await fetch("http://localhost:3000/blog/posts/" + id + "/comments/", {
-    mode: "cors",
-    method: "post",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    },
-    body: new URLSearchParams({
-      text: text.toString(),
-      username: username.toString(),
-    }),
-  })
+  await fetch(
+    "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+      id +
+      "/comments/",
+    {
+      mode: "cors",
+      method: "post",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+      },
+      body: new URLSearchParams({
+        text: text.toString(),
+        username: username.toString(),
+      }),
+    }
+  )
     .then(function (response) {
       const data = response.json();
       return data;
@@ -306,7 +319,7 @@ async function deleteComment(postid, commentid) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "http://localhost:3000/blog/posts/" +
+      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
         postid +
         "/comments/" +
         commentid +

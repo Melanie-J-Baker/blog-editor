@@ -14,7 +14,7 @@ localStorage.setItem("token", "");
 
 async function signup(e, username, password) {
   e.preventDefault();
-  await fetch("https://honored-astonishing-shelf.glitch.me/blog/signup/", {
+  await fetch("https://blog-api-production-66b0.up.railway.app/blog/signup/", {
     mode: "cors",
     method: "post",
     headers: {
@@ -44,7 +44,7 @@ async function signup(e, username, password) {
 
 async function login(e, username, password) {
   e.preventDefault();
-  await fetch("https://honored-astonishing-shelf.glitch.me/blog/login/", {
+  await fetch("https://blog-api-production-66b0.up.railway.app/blog/login/", {
     mode: "cors",
     method: "post",
     headers: {
@@ -81,7 +81,7 @@ async function login(e, username, password) {
 async function fetchPosts() {
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts",
+      "https://blog-api-production-66b0.up.railway.app/blog/posts",
       {
         mode: "cors",
       }
@@ -101,7 +101,7 @@ async function fetchPosts() {
 async function fetchPost(id) {
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/" + id,
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/" + id,
       {
         mode: "cors",
       }
@@ -124,7 +124,7 @@ async function fetchPost(id) {
 async function fetchComments(id) {
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
         id +
         "/comments",
       {
@@ -150,7 +150,7 @@ async function addPost(title, text, published) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/?" +
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/?" +
         new URLSearchParams({
           secret_token: inMemoryToken,
         }),
@@ -206,7 +206,7 @@ async function deletePost(id) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
         id +
         "/?" +
         new URLSearchParams({
@@ -243,7 +243,7 @@ async function updatePost(id, title, text, published) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
         id +
         "/?" +
         new URLSearchParams({
@@ -286,7 +286,7 @@ async function updatePost(id, title, text, published) {
 async function addComment(e, id, text, username) {
   e.preventDefault();
   await fetch(
-    "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+    "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
       id +
       "/comments/",
     {
@@ -319,7 +319,7 @@ async function deleteComment(postid, commentid) {
   let inMemoryToken = localStorage.getItem("token");
   try {
     const response = await fetch(
-      "https://honored-astonishing-shelf.glitch.me/blog/posts/" +
+      "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
         postid +
         "/comments/" +
         commentid +

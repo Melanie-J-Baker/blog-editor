@@ -45,7 +45,8 @@ function signupForm() {
   let submitBtn = document.createElement("button");
   signupForm.id = "signupForm";
   signupForm.method = "POST";
-  signupForm.action = "http://localhost:3000/blog/signup/";
+  signupForm.action =
+    "https://blog-api-production-66b0.up.railway.app/blog/signup/";
   signupForm.onsubmit = (e) => {
     let username = usernameInput.value;
     let password = passwordInput.value;
@@ -94,7 +95,8 @@ function loginForm() {
   let submitBtn = document.createElement("button");
   loginForm.id = "loginForm";
   loginForm.method = "POST";
-  loginForm.action = "http://localhost:3000/blog/login/";
+  loginForm.action =
+    "https://blog-api-production-66b0.up.railway.app/blog/login/";
   loginForm.onsubmit = (e) => {
     let username = usernameInput.value;
     let password = passwordInput.value;
@@ -289,7 +291,7 @@ function addPostForm() {
   backBtn.textContent = "Cancel";
   form.id = "addPostForm";
   form.method = "POST";
-  form.action = "http://localhost:3000/blog/posts/";
+  form.action = "https://blog-api-production-66b0.up.railway.app/blog/posts/";
   form.onsubmit = (event) => {
     event.preventDefault();
     let title = titleInput.value;
@@ -365,7 +367,8 @@ function updatePostForm(id) {
   backBtn.textContent = "Cancel";
   form.id = "updatePostForm";
   form.method = "PUT";
-  form.action = "http://localhost:3000/blog/posts/" + id + "/";
+  form.action =
+    "https://blog-api-production-66b0.up.railway.app/blog/posts/" + id + "/";
   form.onsubmit = (event) => {
     event.preventDefault();
     let title = titleInput.value;
@@ -439,7 +442,10 @@ function addCommentForm(id) {
   backBtn.textContent = "Back to post";
   form.id = "addCommentForm";
   form.method = "POST";
-  form.action = "http://localhost:3000/blog/posts/" + id + "/comments";
+  form.action =
+    "https://blog-api-production-66b0.up.railway.app/blog/posts/" +
+    id +
+    "/comments";
   form.onsubmit = (event) => {
     let text = textInput.value;
     let username = usernameInput.value;

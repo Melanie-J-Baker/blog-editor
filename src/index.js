@@ -38,7 +38,7 @@ async function signup(e, username, password) {
     })
     .catch(function (err) {
       //Failure
-      alert("Error: err");
+      alert("Error:" + err);
     });
 }
 
@@ -74,14 +74,14 @@ async function login(e, username, password) {
     })
     .catch(function (err) {
       //Failure
-      alert("Something went wrong!");
+      alert("Something went wrong!" + err);
     });
 }
 
 async function fetchPosts() {
   try {
     const response = await fetch(
-      "blog-api-production-66b0.up.railway.app/blog/posts",
+      "https://blog-api-production-66b0.up.railway.app/blog/posts",
       {
         mode: "cors",
       }
@@ -311,7 +311,7 @@ async function addComment(e, id, text, username) {
     })
     .catch(function (err) {
       //Failure
-      alert("Error: err");
+      alert("Error:" + err);
     });
 }
 
@@ -336,7 +336,7 @@ async function deleteComment(postid, commentid) {
       }
     );
     if (response.ok) {
-      let result = await response.json();
+      await response.json();
       contentDiv.textContent = "Comment deleted";
       setTimeout(() => {
         showPost(postid);
